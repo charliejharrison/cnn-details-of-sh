@@ -7,6 +7,7 @@ import time
 import datetime
 import data_helpers
 from text_cnn import TextCNN
+from sklearn.cross_validation import StratifiedShuffleSplit
 
 # Parameters
 # ==================================================
@@ -35,21 +36,35 @@ for attr, value in sorted(FLAGS.__flags.items()):
 print("")
 
 
-# Data Preparatopn
+# Data Preparation
 # ==================================================
 
 # Load data
 print("Loading data...")
 x, y, vocabulary, vocabulary_inv = data_helpers.load_data()
+
 # Randomly shuffle data
-np.random.seed(10)
-shuffle_indices = np.random.permutation(np.arange(len(y)))
-x_shuffled = x[shuffle_indices]
-y_shuffled = y[shuffle_indices]
+# np.random.seed(10)
+# shuffle_indices = np.random.permutation(np.arange(len(y)))
+# x_shuffled = x[shuffle_indices]
+# y_shuffled = y[shuffle_indices]
+
 # Split train/test set
 # TODO: This is very crude, should use cross-validation
-x_train, x_dev = x_shuffled[:-1000], x_shuffled[-1000:]
-y_train, y_dev = y_shuffled[:-1000], y_shuffled[-1000:]
+# split_point = len(y_shuffled)/10.0
+# x_train, x_dev = x_shuffled[:-split_point], x_shuffled[-split_point:]
+# y_train, y_dev = y_shuffled[:-split_point], y_shuffled[-split_point:]
+
+labels = list([i[0] for i in y])
+
+n_splits = 1
+shuffler = StratifiedShuffleSplit(labels, n_splits, test_size=0.2)
+for train_inds, test_inds in shuffler:
+    pass
+
+x_train, x_dev = x[train_inds], x[test_inds]
+y_train, y_dev = y[train_inds], y[test_inds]
+
 print("Vocabulary Size: {:d}".format(len(vocabulary)))
 print("Train/Dev split: {:d}/{:d}".format(len(y_train), len(y_dev)))
 

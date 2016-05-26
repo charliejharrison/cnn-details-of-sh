@@ -30,10 +30,14 @@ def load_data_and_labels():
     Loads MR polarity data from files, splits the data into words and generates labels.
     Returns split sentences and labels.
     """
+    DATA_PATH = "/Volumes/data/Mind/data_dumps/"
+    POSITIVE = DATA_PATH + "details_of_sh-raw.txt"
+    NEGATIVE = DATA_PATH + "unflagged-raw.txt"
+
     # Load data from files
-    positive_examples = list(open("./data/rt-polaritydata/rt-polarity.pos", "r").readlines())
+    positive_examples = list(open(POSITIVE, "r").readlines())
     positive_examples = [s.strip() for s in positive_examples]
-    negative_examples = list(open("./data/rt-polaritydata/rt-polarity.neg", "r").readlines())
+    negative_examples = list(open(NEGATIVE, "r").readlines())
     negative_examples = [s.strip() for s in negative_examples]
     # Split by words
     x_text = positive_examples + negative_examples
